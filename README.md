@@ -1,5 +1,13 @@
 # Notification system
 
+## Requirements
+
+The system uses several 3rd party services to cover the functionalities. Some of them are:
+
+* `Twilio` to send sms notifications - https://www.twilio.com/docs/sms
+* Gmail's SMTP server to send emails
+* Slack's webhook API to send slack channel messages
+
 ## Architecture
 
 The idea behind how to system operates is that it separates the accepting of new notification from the actual sending of them.
