@@ -60,8 +60,6 @@ linters-settings:
         severity: warning
       - name: context-as-argument
         severity: warning
-      - name: exported
-        severity: warning
       - name: error-naming
         severity: warning
       - name: increment-decrement

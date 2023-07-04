@@ -85,9 +85,9 @@ func NewMuxer(notificationRepository NotificationRepository) *http.ServeMux {
 
 	muxer := http.NewServeMux()
 
-	muxer.HandleFunc("/sms", h.HandleSMSNotification)
-	muxer.HandleFunc("/email", h.HandleEmailNotification)
-	muxer.HandleFunc("/slack", h.HandleSlackNotification)
+	muxer.HandleFunc("/sms", recoverHandler(h.HandleSMSNotification))
+	muxer.HandleFunc("/email", recoverHandler(h.HandleEmailNotification))
+	muxer.HandleFunc("/slack", recoverHandler(h.HandleSlackNotification))
 
 	return muxer
 }
