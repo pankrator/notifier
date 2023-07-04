@@ -17,8 +17,10 @@ import (
 )
 
 const (
-	_pgDriver   = "postgres"
-	_connString = "host=%s port=%s user=%s password=%s dbname=%s sslmode=%s"
+	_pgDriver     = "postgres"
+	_connString   = "host=%s port=%s user=%s password=%s dbname=%s sslmode=%s"
+	_maxIdleConns = 10
+	_maxConns     = 100
 )
 
 type DBConn struct {
@@ -55,6 +57,9 @@ func NewDBConn(ctx context.Context, c config.DB) (*DBConn, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	sqlxDB.SetMaxIdleConns(_maxIdleConns)
+	sqlxDB.SetMaxOpenConns(_maxIdleConns)
 
 	return &DBConn{
 		DB: sqlxDB,

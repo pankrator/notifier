@@ -112,6 +112,42 @@ OK
 ```
 
 
+## How to start
+
+* There is an example `.env.example` file which should be configured to access the 3rd party services described in the section with Requirements.
+
+In order to run the service locally:
+
+* Run database:
+```bash
+make up
+```
+
+* Run migrations:
+```bash
+make migrate
+```
+
+* Run server
+```bash
+make server
+```
+
+* Run processors
+```bash
+make process-email
+make process-slack
+make process-sms
+```
+
+### Example requests
+
+```bash
+curl -i localhost:8080/email -d '{"message":"Hello World", "recepient":"<email_address>"}'
+curl -i localhost:8080/slack -d '{"message":"Hello World"}'
+curl -i localhost:8080/sms -d '{"message":"Hello World", "recepient":"<phone_number>"}'
+```
+
 ## Running in production
 
 ### Kubernetes
