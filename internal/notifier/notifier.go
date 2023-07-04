@@ -17,6 +17,15 @@ var (
 	ErrNotifierNotFound = errors.New("no such notifier found")
 )
 
+type Client interface {
+	Send(context.Context, Notification) error
+}
+
+type Notification struct {
+	Message   string
+	Recipient string
+}
+
 type Notifier struct {
 	clients map[NotificationType]Client
 }
@@ -29,15 +38,6 @@ func NewNotifier() *Notifier {
 
 func (n *Notifier) AddNotifierClient(notificationType NotificationType, c Client) {
 	n.clients[notificationType] = c
-}
-
-type Client interface {
-	Send(context.Context, Notification) error
-}
-
-type Notification struct {
-	Message   string
-	Recipient string
 }
 
 func (n *Notifier) Send(ctx context.Context, notification Notification, notificationType NotificationType) error {
