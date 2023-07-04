@@ -40,9 +40,10 @@ func (r *NotificationRepository) InsertOne(ctx context.Context, not *entity.Noti
 	return nil
 }
 
-func (r *NotificationRepository) SelectByTypeForUpdate(
+func (r *NotificationRepository) ListByTypeForUpdate(
 	ctx context.Context,
 	notificationType entity.NotificationType,
+	batchSize int,
 ) ([]*entity.Notification, error) {
 	result := make([]*entity.Notification, 0)
 
@@ -51,8 +52,8 @@ func (r *NotificationRepository) SelectByTypeForUpdate(
 	FROM notifications WHERE type=$1
 	ORDER BY created_at ASC
 	FOR UPDATE SKIP LOCKED
-	LIMIT 1
-	`, notificationType); err != nil {
+	LIMIT $2
+	`, notificationType, batchSize); err != nil {
 		return nil, err
 	}
 

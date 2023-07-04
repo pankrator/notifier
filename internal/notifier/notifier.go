@@ -1,6 +1,9 @@
 package notifier
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
 type NotificationType string
 
@@ -8,6 +11,10 @@ const (
 	EmailNotificationType NotificationType = "email"
 	SlackNotificationType NotificationType = "slack"
 	SMSNotificationType   NotificationType = "sms"
+)
+
+var (
+	ErrNotifierNotFound = errors.New("no such notifier found")
 )
 
 type Notifier struct {
@@ -33,18 +40,11 @@ type Notification struct {
 	Recipient string
 }
 
-type EmailNotification struct {
-	Message   string
-	Recipient string
-}
-
-func NewEmailNotification(message, recipient string) *EmailNotification {
-	return &EmailNotification{
-		Message:   message,
-		Recipient: recipient,
-	}
-}
-
 func (n *Notifier) Send(ctx context.Context, notification Notification, notificationType NotificationType) error {
-	return n.clients[notificationType].Send(ctx, notification)
+	client, found := n.clients[notificationType]
+	if !found {
+		return ErrNotifierNotFound
+	}
+
+	return client.Send(ctx, notification)
 }

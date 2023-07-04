@@ -14,7 +14,7 @@ import (
 )
 
 type NotificationRepository interface {
-	SelectByTypeForUpdate(context.Context, entity.NotificationType) ([]*entity.Notification, error)
+	ListByTypeForUpdate(context.Context, entity.NotificationType, int) ([]*entity.Notification, error)
 	DeleteByIDs(ctx context.Context, ids []uuid.UUID) error
 }
 
@@ -27,6 +27,7 @@ type Processor struct {
 	notificationRepository NotificationRepository
 	notifier               Notifier
 	fetchInterval          time.Duration
+	batchSize              int
 }
 
 func NewProcessor(
@@ -40,6 +41,7 @@ func NewProcessor(
 		notificationRepository: notificationRepository,
 		notifier:               notifier,
 		fetchInterval:          c.FetchInterval,
+		batchSize:              c.BatchSize,
 	}
 }
 
@@ -52,7 +54,7 @@ func (p *Processor) Start(ctx context.Context, notificationType entity.Notificat
 		}
 
 		if err := p.transactioner.RunInTx(ctx, func(ctx context.Context) error {
-			result, err := p.notificationRepository.SelectByTypeForUpdate(ctx, notificationType)
+			result, err := p.notificationRepository.ListByTypeForUpdate(ctx, notificationType, p.batchSize)
 			if err != nil {
 				log.Printf("Could not select notification: %s", err)
 			}

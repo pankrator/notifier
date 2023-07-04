@@ -16,11 +16,11 @@ type Server struct {
 	config *config.Server
 }
 
-func NewServer(c *config.Server, mux *http.ServeMux) *Server {
+func NewServer(c *config.Server, handler http.Handler) *Server {
 	return &Server{
 		server: &http.Server{
 			Addr:    fmt.Sprintf("%s:%d", c.Host, c.Port),
-			Handler: mux,
+			Handler: handler,
 		},
 		config: c,
 	}
