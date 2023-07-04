@@ -22,6 +22,9 @@ func main() {
 	}
 
 	notificationTypeArg := flag.String("type", "slack", "notification type to process")
+
+	flag.Parse()
+
 	notificationType := parseType(*notificationTypeArg)
 
 	c, err := config.NewConfig()
@@ -42,6 +45,7 @@ func main() {
 	not := notifier.NewNotifier()
 	not.AddNotifierClient(notifier.EmailNotificationType, notifier.NewEmailer(c.EmailerConfig))
 	not.AddNotifierClient(notifier.SlackNotificationType, notifier.NewSlacker(c.SlackerConfig))
+	not.AddNotifierClient(notifier.SMSNotificationType, notifier.NewSMSNotifier(c.SMSConfig))
 
 	notificationProcessor := processor.NewProcessor(
 		conn,

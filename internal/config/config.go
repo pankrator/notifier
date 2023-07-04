@@ -6,6 +6,7 @@ type Config struct {
 	Server        Server        `env:""`
 	EmailerConfig EmailerConfig `env:""`
 	SlackerConfig SlackerConfig `env:""`
+	SMSConfig     SMSConfig     `env:""`
 	DB            DB            `env:""`
 	Processor     Processor     `env:""`
 }
