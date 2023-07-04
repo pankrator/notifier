@@ -33,6 +33,11 @@ func (h *Handler) HandleEmailNotification(rw http.ResponseWriter, req *http.Requ
 }
 
 func (h *Handler) process(rw http.ResponseWriter, req *http.Request, notificationType entity.NotificationType) {
+	if req.Method != http.MethodPost {
+		rw.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
 	type request struct {
 		Message   string `json:"message"`
 		Recepient string `json:"recepient"`
