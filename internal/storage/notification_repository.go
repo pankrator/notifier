@@ -21,9 +21,9 @@ func NewNotificationRepository(queryer Queryer) *NotificationRepository {
 
 func (r *NotificationRepository) InsertOne(ctx context.Context, not *entity.Notification) error {
 	res, err := r.queryer.NamedExecContext(ctx, `INSERT INTO notifications
-		(id, type, message, recepient, metadata, created_at)
+		(id, type, message, recipient, metadata, created_at)
 		VALUES
-		(:id, :type, :message, :recepient, :metadata, :created_at)`, not)
+		(:id, :type, :message, :recipient, :metadata, :created_at)`, not)
 	if err != nil {
 		return err
 	}
@@ -40,11 +40,14 @@ func (r *NotificationRepository) InsertOne(ctx context.Context, not *entity.Noti
 	return nil
 }
 
-func (r *NotificationRepository) SelectByTypeForUpdate(ctx context.Context, notificationType entity.NotificationType) ([]*entity.Notification, error) {
+func (r *NotificationRepository) SelectByTypeForUpdate(
+	ctx context.Context,
+	notificationType entity.NotificationType,
+) ([]*entity.Notification, error) {
 	result := make([]*entity.Notification, 0)
 
 	if err := r.queryer.SelectContext(ctx, &result, `
-	SELECT id, type, message, recepient, metadata, created_at
+	SELECT id, type, message, recipient, metadata, created_at
 	FROM notifications WHERE type=$1
 	ORDER BY created_at ASC
 	FOR UPDATE SKIP LOCKED
@@ -64,5 +67,6 @@ func (r *NotificationRepository) DeleteByIDs(ctx context.Context, ids []uuid.UUI
 
 	query = r.queryer.Rebind(query)
 	_, err = r.queryer.ExecContext(ctx, query, args...)
+
 	return err
 }

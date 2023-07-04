@@ -62,7 +62,7 @@ Another approach that should give better results is using kafka with the outbox 
 ```json
 {
     "message":"Hello World",
-    "recepient":"<email>"
+    "recipient":"<email>"
 }
 ```
 
@@ -80,7 +80,7 @@ OK
 ```json
 {
     "message":"Hello World",
-    "recepient":"<phone_number>"
+    "recipient":"<phone_number>"
 }
 ```
 
@@ -96,7 +96,7 @@ OK
 
 **Request**
 
-The recepient depends on the Webhook that is configured
+The recipient depends on the Webhook that is configured
 
 ```json
 {
@@ -143,9 +143,9 @@ make process-sms
 ### Example requests
 
 ```bash
-curl -i localhost:8080/email -d '{"message":"Hello World", "recepient":"<email_address>"}'
+curl -i localhost:8080/email -d '{"message":"Hello World", "recipient":"<email_address>"}'
 curl -i localhost:8080/slack -d '{"message":"Hello World"}'
-curl -i localhost:8080/sms -d '{"message":"Hello World", "recepient":"<phone_number>"}'
+curl -i localhost:8080/sms -d '{"message":"Hello World", "recipient":"<phone_number>"}'
 ```
 
 ## Running in production

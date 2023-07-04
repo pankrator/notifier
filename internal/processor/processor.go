@@ -66,7 +66,7 @@ func (p *Processor) Start(ctx context.Context, notificationType entity.Notificat
 			for _, emailNot := range result {
 				if err := p.notifier.Send(ctx, notifier.Notification{
 					Message:   emailNot.Message,
-					Recepient: emailNot.Recepient,
+					Recipient: emailNot.Recipient,
 				}, notificationType.ToNotifierType()); err != nil {
 					return errors.Wrap(err, "could not send notification")
 				}

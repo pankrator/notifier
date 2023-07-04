@@ -33,6 +33,7 @@ func (s *Server) Start(ctx context.Context, wg *sync.WaitGroup) {
 		defer wg.Done()
 
 		log.Printf("Server listening on address %s:%d", s.config.Host, s.config.Port)
+
 		if err := s.server.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
 				log.Fatal(err)

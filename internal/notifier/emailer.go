@@ -28,7 +28,7 @@ func (e *Emailer) Send(ctx context.Context, notification Notification) error {
 	m := gomail.NewMessage()
 
 	m.SetHeader("From", e.sender)
-	m.SetHeader("To", notification.Recepient)
+	m.SetHeader("To", notification.Recipient)
 	m.SetHeader("Subject", "Alert")
 	m.SetBody("text/plain", notification.Message)
 

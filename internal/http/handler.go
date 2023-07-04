@@ -40,20 +40,23 @@ func (h *Handler) process(rw http.ResponseWriter, req *http.Request, notificatio
 
 	type request struct {
 		Message   string `json:"message"`
-		Recepient string `json:"recepient"`
+		Recipient string `json:"recipient"`
 	}
 
 	var r request
+
 	bytes, err := io.ReadAll(req.Body)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		log.Printf("could not read body: %s", err)
+
 		return
 	}
 
 	if err := json.Unmarshal(bytes, &r); err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		log.Printf("could not unmarshal request: %s", err)
+
 		return
 	}
 
@@ -61,15 +64,17 @@ func (h *Handler) process(rw http.ResponseWriter, req *http.Request, notificatio
 		ID:        uuid.New(),
 		Type:      notificationType,
 		Message:   r.Message,
-		Recepient: r.Recepient,
+		Recipient: r.Recipient,
 		Metadata:  []byte("{}"),
 		CreatedAt: time.Now().UTC(),
 	}); err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		log.Printf("could not insert notification: %s", err)
+
 		return
 	}
 
+	// nolint:errcheck
 	rw.Write([]byte("OK"))
 }
 

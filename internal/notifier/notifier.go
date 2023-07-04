@@ -30,18 +30,18 @@ type Client interface {
 
 type Notification struct {
 	Message   string
-	Recepient string
+	Recipient string
 }
 
 type EmailNotification struct {
 	Message   string
-	Recepient string
+	Recipient string
 }
 
-func NewEmailNotification(message, recepient string) *EmailNotification {
+func NewEmailNotification(message, recipient string) *EmailNotification {
 	return &EmailNotification{
 		Message:   message,
-		Recepient: recepient,
+		Recipient: recipient,
 	}
 }
 

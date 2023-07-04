@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS notifications(
 	id uuid PRIMARY KEY NOT NULL,
 	type notification_type NOT NULL,
 	message text NOT NULL,
-	recepient varchar(500) NOT NULL,
+	recipient varchar(500) NOT NULL,
 	metadata jsonb NULL,
 	created_at timestamp without time zone NOT NULL
 );

@@ -28,7 +28,7 @@ func NewSMSNotifier(c config.SMSConfig) *SMSNotifier {
 func (s *SMSNotifier) Send(ctx context.Context, notification Notification) error {
 	msg := &twilioApi.CreateMessageParams{}
 
-	msg.SetTo(notification.Recepient)
+	msg.SetTo(notification.Recipient)
 	msg.SetFrom(s.fromNumber)
 	msg.SetBody(notification.Message)
 

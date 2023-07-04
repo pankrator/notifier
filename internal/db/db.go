@@ -51,8 +51,8 @@ func NewDBConn(ctx context.Context, c config.DB) (*DBConn, error) {
 	}
 
 	db = sqldblogger.OpenDriver(dsn, db.Driver(), zerologadapter.New(zlogger), loggerOptions...)
-
 	sqlxDB := sqlx.NewDb(db, _pgDriver)
+
 	err = sqlxDB.Ping()
 	if err != nil {
 		return nil, err
@@ -66,8 +66,8 @@ func NewDBConn(ctx context.Context, c config.DB) (*DBConn, error) {
 	}, nil
 }
 
-func (t *DBConn) RunInTx(ctx context.Context, run func(ctx context.Context) error) error {
-	tx, err := t.beginTx(ctx)
+func (conn *DBConn) RunInTx(ctx context.Context, run func(ctx context.Context) error) error {
+	tx, err := conn.beginTx(ctx)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,9 @@ func (t *DBConn) RunInTx(ctx context.Context, run func(ctx context.Context) erro
 
 	defer func() {
 		if !done {
-			_ = tx.Rollback()
+			if err = tx.Rollback(); err != nil {
+				log.Printf("could not rollback: %s", err)
+			}
 		}
 	}()
 
@@ -89,12 +91,12 @@ func (t *DBConn) RunInTx(ctx context.Context, run func(ctx context.Context) erro
 	return tx.Commit()
 }
 
-func (t *DBConn) beginTx(ctx context.Context) (*Tx, error) {
+func (conn *DBConn) beginTx(ctx context.Context) (*Tx, error) {
 	if tx := ExtractTransactionFromContext(ctx); tx != nil {
 		return tx, nil
 	}
 
-	tx, err := t.BeginTxx(ctx, &sql.TxOptions{
+	tx, err := conn.BeginTxx(ctx, &sql.TxOptions{
 		Isolation: sql.LevelReadCommitted,
 	})
 	if err != nil {
@@ -104,6 +106,7 @@ func (t *DBConn) beginTx(ctx context.Context) (*Tx, error) {
 	txx := &Tx{
 		Tx: tx,
 	}
+
 	return txx, nil
 }
 

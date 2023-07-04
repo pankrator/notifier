@@ -25,7 +25,7 @@ type Notification struct {
 	ID        uuid.UUID        `db:"id"`
 	Type      NotificationType `db:"type"`
 	Message   string           `db:"message"`
-	Recepient string           `db:"recepient"`
+	Recipient string           `db:"recipient"`
 	Metadata  json.RawMessage  `db:"metadata"`
 	CreatedAt time.Time        `db:"created_at"`
 }
