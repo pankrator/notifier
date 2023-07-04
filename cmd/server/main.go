@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"sync"
 
@@ -16,13 +17,13 @@ import (
 func main() {
 	if os.Getenv("LOADED") != "true" {
 		if err := godotenv.Load(".env"); err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 
 	c, err := config.NewConfig()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	ctx, cancel := signal.HandleSignal()
@@ -30,7 +31,7 @@ func main() {
 
 	conn, err := db.NewDBConn(ctx, c.DB)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	notificationRepo := storage.NewNotificationRepository(conn)

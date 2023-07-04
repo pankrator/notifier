@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -17,7 +18,7 @@ import (
 func main() {
 	if os.Getenv("LOADED") != "true" {
 		if err := godotenv.Load(".env"); err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 
@@ -29,7 +30,7 @@ func main() {
 
 	c, err := config.NewConfig()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	ctx, cancel := signal.HandleSignal()
@@ -37,7 +38,7 @@ func main() {
 
 	conn, err := db.NewDBConn(ctx, c.DB)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	notificationRepo := storage.NewNotificationRepository(conn)
@@ -55,7 +56,7 @@ func main() {
 	)
 
 	if err := notificationProcessor.Start(ctx, notificationType); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 

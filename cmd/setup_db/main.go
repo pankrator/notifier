@@ -13,13 +13,13 @@ import (
 func main() {
 	if os.Getenv("LOADED") != "true" {
 		if err := godotenv.Load(".env"); err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 
 	c, err := config.NewConfig()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	ctx, cancel := signal.HandleSignal()
@@ -27,7 +27,7 @@ func main() {
 
 	conn, err := db.NewDBConn(ctx, c.DB)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	_, err = conn.ExecContext(ctx, `
@@ -35,7 +35,7 @@ DROP TYPE IF EXISTS notification_type;
 	`)
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	_, err = conn.ExecContext(ctx, `
@@ -43,7 +43,7 @@ DROP TYPE IF EXISTS notification_type;
 		`)
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	_, err = conn.ExecContext(ctx, `
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS notifications(
 	`)
 
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	log.Print("Finished migrations")
